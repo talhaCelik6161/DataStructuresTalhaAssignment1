@@ -1,10 +1,14 @@
 package project20280.tree;
 
 import project20280.interfaces.Position;
+import project20280.interfaces.Queue;
 import project20280.interfaces.Tree;
+import project20280.stacksqueues.ArrayQueue;
+import project20280.stacksqueues.LinkedQueue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -101,7 +105,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     public int depth(Position<E> p) throws IllegalArgumentException {
         // TODO
-        return 0;
+        if(isRoot(p))
+            return 0;
+        else
+            return 1 + depth(parent(p));
     }
 
     /**
@@ -125,7 +132,11 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     public int height(Position<E> p) throws IllegalArgumentException {
         // TODO
-        return 0;
+        int h = 0;
+        for(Position<E> c : children(p)) {
+            h = Math.max(h, 1 + height(c));
+        }
+        return h;
     }
 
     //---------- support for various iterations of a tree ----------
@@ -177,6 +188,9 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     private void preorderSubtree(Position<E> p, List<Position<E>> snapshot) {
         // TODO
+        snapshot.add(p); // for preorder, we add position p before exploring subtrees
+        for (Position<E> c : children(p))
+            preorderSubtree(c, snapshot);
     }
 
     /**
@@ -186,7 +200,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     public Iterable<Position<E>> preorder() {
         // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty())
+            preorderSubtree(root(), snapshot); // fill the snapshot recursively
+        return snapshot;
     }
 
     /**
@@ -197,6 +214,9 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @param snapshot a list to which results are appended
      */
     private void postorderSubtree(Position<E> p, List<Position<E>> snapshot) {
+        for(Position<E> c : children(p))
+            postorderSubtree(c,snapshot);
+        snapshot.add(p);
         // TODO
     }
 

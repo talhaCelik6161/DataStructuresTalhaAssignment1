@@ -30,7 +30,12 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
      */
     private int findIndex(K key) {
         // TODO
-        return 0;
+        for(int i=0;i< table.size();i++){
+            if(table.get(i).getKey().equals(key)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     // public methods
@@ -55,7 +60,9 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
     @Override
     public V get(K key) {
         // TODO
-        return null;
+        int i=findIndex(key);
+        if(i==-1){return null;}
+        return table.get(i).getValue();
     }
 
     /**
@@ -70,8 +77,13 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public V put(K key, V value) {
-        // TODO
-        return null;
+        //TODO
+        int j = findIndex(key);
+        if (j == -1) {
+            table.add(new MapEntry<>(key, value));          // add new entry
+            return null;
+        } else                                            // key already exists
+            return table.get(j).setValue(value);
     }
 
     /**
@@ -85,7 +97,14 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
     @Override
     public V remove(K key) {
         // TODO
-        return null;
+        int j = findIndex(key);
+        int n = size();
+        if (j == -1) return null;                         // not found
+        V answer = table.get(j).getValue();
+        if (j != n - 1)
+            table.set(j, table.get(n-1));                   // relocate last entry to 'hole' created by removal
+        table.remove(n-1);                                // remove last entry of table
+        return answer;
     }
 
     // ---------------- nested EntryIterator class ----------------

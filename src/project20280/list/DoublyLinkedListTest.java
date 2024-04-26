@@ -19,11 +19,11 @@ class DoublyLinkedListTest {
     @Test
     void testIsEmpty() {
         DoublyLinkedList<Integer> ll = new DoublyLinkedList<>();
-		assertTrue(ll.isEmpty());
+        assertTrue(ll.isEmpty());
         ll.addFirst(0);
-		assertFalse(ll.isEmpty());
+        assertFalse(ll.isEmpty());
         ll.removeFirst();
-		assertTrue(ll.isEmpty());
+        assertTrue(ll.isEmpty());
     }
 
     @Test
@@ -33,7 +33,7 @@ class DoublyLinkedListTest {
         assertEquals(-1, ll.first());
 
         ll.removeFirst();
-		assertNull(ll.first());
+        assertNull(ll.first());
 
 
     }

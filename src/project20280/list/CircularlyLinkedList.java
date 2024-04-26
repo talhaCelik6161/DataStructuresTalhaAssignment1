@@ -28,11 +28,12 @@ public class CircularlyLinkedList<E> implements List<E> {
         }
     }
 
-    private final Node<E> tail = null;
-    private final int size = 0;
+    private  Node<E> tail = null;
+    private  int size = 0;
 
     public CircularlyLinkedList() {
-
+        tail = null;
+        size = 0;
     }
 
     @Override
@@ -43,7 +44,14 @@ public class CircularlyLinkedList<E> implements List<E> {
     @Override
     public E get(int i) {
         // TODO
-        return null;
+        if (isEmpty() || i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        Node<E> curr = tail.getNext();  //head
+        for (int j = 0; j < i; j++) {
+            curr = curr.getNext();
+        }
+        return curr.getData();
     }
 
     /**
@@ -56,16 +64,52 @@ public class CircularlyLinkedList<E> implements List<E> {
     @Override
     public void add(int i, E e) {
         // TODO
+        if (i < 0 || i > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        if (i == 0) {
+            addFirst(e);
+        } else if (i == size) {
+            addLast(e);
+        } else {
+            Node<E> newNode = new Node<>(e, null);
+            Node<E> prev = tail;
+            for (int j = 0; j < i; j++) {
+                prev = prev.getNext();
+            }
+            newNode.setNext(prev.getNext());
+            prev.setNext(newNode);
+            size++;
+        }
     }
 
     @Override
     public E remove(int i) {
-        // TODO
-        return null;
+        //TODO
+        if (isEmpty() || i < 0 || i >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        if (i == 0) {
+            return removeFirst();
+        } else if (i == size - 1) {
+            return removeLast();
+        } else {
+            Node<E> prev = tail;
+            for (int j = 0; j < i; j++) {
+                prev = prev.getNext();
+            }
+            Node<E> current = prev.getNext();
+            prev.setNext(current.getNext());
+            size--;
+            return current.getData();
+        }
     }
 
     public void rotate() {
         // TODO
+        if (tail != null) {
+            tail = tail.getNext();
+        }
     }
 
     private class CircularlyLinkedListIterator<E> implements Iterator<E> {
@@ -98,23 +142,62 @@ public class CircularlyLinkedList<E> implements List<E> {
     @Override
     public E removeFirst() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+            //throw new IllegalStateException("Empty List");
+        }
+        Node<E> head = tail.getNext();
+        if (size == 1) {
+            tail = null;
+        } else {
+            tail.setNext(head.getNext());
+        }
+        size--;
+        return head.getData();
     }
 
     @Override
     public E removeLast() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            throw new IllegalArgumentException("Empy list");
+        }
+        Node<E> head = tail.getNext();
+        if (size == 1) {
+            tail = null;
+            size = 0;
+            return head.getData();
+        } else {
+            Node<E> prev = tail;
+            for (int i = 0; i < size - 1; i++) {
+                prev = prev.getNext();
+            }
+            E removedData = prev.getNext().getData();
+            prev.setNext(head);
+            tail = prev;
+            size--;
+            return removedData;
+        }
     }
 
     @Override
     public void addFirst(E e) {
-        // TODO
+        Node<E> newNode = new Node<>(e, null);
+        if (isEmpty()) {
+            tail = newNode;
+            newNode.setNext(newNode);
+        } else {
+            newNode.setNext(tail.getNext());
+            tail.setNext(newNode);
+        }
+        size++;
     }
 
     @Override
     public void addLast(E e) {
         // TODO
+        addFirst(e);
+        tail = tail.getNext();
     }
 
 
@@ -161,6 +244,5 @@ public class CircularlyLinkedList<E> implements List<E> {
         for (Integer e : ll) {
             System.out.println("value: " + e);
         }
-
     }
 }

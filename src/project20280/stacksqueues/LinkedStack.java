@@ -4,8 +4,8 @@ import project20280.interfaces.Stack;
 import project20280.list.DoublyLinkedList;
 
 public class LinkedStack<E> implements Stack<E> {
-
-    DoublyLinkedList<E> ll;
+    DoublyLinkedList<E> ll = new DoublyLinkedList<E>();
+    private int size = 0;
 
     public static void main(String[] args) {
     }
@@ -26,19 +26,26 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public void push(E e) {
+        ll.addFirst(e);
+        size++;
         // TODO
     }
 
     @Override
     public E top() {
         // TODO
-        return null;
+        return ll.first();
     }
 
     @Override
     public E pop() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        E e = ll.remove(((Integer) ll.last() )- 1);
+        size--;
+        return e;
     }
 
     public String toString() {

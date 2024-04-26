@@ -31,14 +31,15 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
      * Returns the height of the given tree position.
      */
     protected int height(Position<Entry<K, V>> p) {
+        return tree.getAux(p);
         // TODO
-        return 0;
     }
 
     /**
      * Recomputes the height of the given position based on its children's heights.
      */
     protected void recomputeHeight(Position<Entry<K, V>> p) {
+        tree.setAux(p, 1 + Math.max(height(left(p)), height(right(p))));
         // TODO
     }
 
@@ -46,8 +47,9 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
      * Returns whether a position has balance factor between -1 and 1 inclusive.
      */
     protected boolean isBalanced(Position<Entry<K, V>> p) {
+        int balanceFactor = height(left(p)) - height(right(p));
+        return balanceFactor >= -1 && balanceFactor <= 1;
         // TODO
-        return false;
     }
 
     /**
@@ -55,7 +57,15 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
      */
     protected Position<Entry<K, V>> tallerChild(Position<Entry<K, V>> p) {
         // TODO
-        return null;
+        if (height(left(p)) > height(right(p))) {
+            return left(p);
+        } else if (height(left(p)) < height(right(p))) {
+            return right(p);
+        }
+        // Equal height children, return left if p is a left child, otherwise right.
+        if (isRoot(p)) return left(p);
+        if (p == left(parent(p))) return left(p);
+        else return right(p);
     }
 
     /**
@@ -65,6 +75,17 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
      */
     protected void rebalance(Position<Entry<K, V>> p) {
         // TODO
+        while (p != null) {
+            recomputeHeight(p);
+            if (!isBalanced(p)) {
+                // Perform trinode restructuring starting from p.
+                Position<Entry<K, V>> x = tallerChild(tallerChild(p));
+                p = restructure(x);
+                recomputeHeight(left(p));
+                recomputeHeight(right(p));
+            }
+            p = parent(p);
+        }
     }
 
     /**

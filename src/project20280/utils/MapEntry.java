@@ -42,7 +42,7 @@ public class MapEntry<K extends Comparable<K>, V> implements Entry<K, V> {
         return "" + k;
     }
 
-    @Override
+
     public int compareTo(Entry<K, V> o) {
         return this.getKey().compareTo(o.getKey());
     }
